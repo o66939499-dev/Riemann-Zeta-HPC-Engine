@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Riemann Zeta HPC Engine</title>
+    <link rel="stylesheet" href="style.css">
+
+  
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <span class="badge">C++ HPC & Visualization</span>
+        <h1>Riemann Zeta High-Precision Evaluator</h1>
+        <p>Real-time graph analysis matching C++ Brent Method output on the critical line $s = \frac{1}{2} + it$.</p>
+    </header>
+
+    <div class="card">
+        <h3 class="card-title">Riemann-Siegel $Z(t)$ Real-Time Function Curve</h3>
+        <p class="card-subtitle">Qyzyl nokatlar C++ kodyňyz tarapyndan Brent usuly arkaly tapylan nollary ($Z(t) = 0$) aňladýar.</p>
+        <div class="chart-container">
+            <canvas id="zetaChart"></canvas>
+        </div>
+    </div>
+
+    <div class="card">
+        <h3 class="card-title">Execution Log (C++ Console Output)</h3>
+        <div class="terminal-output">
+=========================================================
+   RIEMANN ZETA HIGH-PRECISION HPC ENGINE (MPFR + OpenMP)
+=========================================================
+[HPC Engine] Range: t in [10.0, 30.0]
+[Precision] Tolerance: 1e-12 (256-bit Precision)
+
+Zero #1  -> s = 0.5 + 14.1347251417346937i
+Zero #2  -> s = 0.5 + 21.0220396387715549i
+Zero #3  -> s = 0.5 + 25.0108575801456887i
+
+---------------------------------------------------------
+Status: Execution Finished Successfully.
+=========================================================
+        </div>
+    </div>
+</div>
+
+
+<script src="script.js"></script>
+
+</body>
+</html>
