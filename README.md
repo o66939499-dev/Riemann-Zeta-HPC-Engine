@@ -1,6 +1,7 @@
 
 # High-Performance Riemann Zeta Zero Search & Prime Gap Engine (HPC)
 https://github.com/o66939499-dev/Riemann-Zeta-HPC-Engine.git
+
 ![C++20](https://img.shields.io/badge/C%2B%2B-20-blue.svg)
 ![OpenMP](https://img.shields.io/badge/Parallelism-OpenMP-orange.svg)
 ![GNU GMP](https://img.shields.io/badge/Precision-GNU%20GMP-green.svg)
