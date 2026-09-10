@@ -1,79 +1,128 @@
-
 # High-Performance Riemann Zeta Zero Search & Prime Gap Engine (HPC)
-https://o66939499-dev.github.io/Riemann-Zeta-HPC-Engine/
+
+<https://o66939499-dev.github.io/Riemann-Zeta-HPC-Engine/>
 
 ![C++20](https://img.shields.io/badge/C%2B%2B-20-blue.svg)
 ![OpenMP](https://img.shields.io/badge/Parallelism-OpenMP-orange.svg)
 ![GNU GMP](https://img.shields.io/badge/Precision-GNU%20GMP-green.svg)
 ![License](https://img.shields.io/badge/License-MIT-brightgreen.svg)
 
-An advanced, high-performance computing (HPC) framework written in C++ for numerical evaluation of the **Riemann Zeta Function** $\zeta(s)$, multi-threaded candidate zero detection along the **Critical Line** $\text{Re}(s) = 0.5$, and high-precision **Prime Gap Analysis** using arbitrary-precision arithmetic.
+A high-performance computing (HPC) project in C++ for numerically evaluating
+the **Riemann Zeta function** ζ(s), locating candidate non-trivial zeros on
+the **critical line** Re(s) = 0.5, and analyzing **prime gaps** using
+arbitrary-precision arithmetic.
 
 ---
 
 ## 🌟 Key Features
 
-* **Parallel Dirichlet Eta Acceleration:** Converts the conditionally convergent Dirichlet series for $\zeta(s)$ into the rapidly convergent Dirichlet Eta function $\eta(s)$ accelerated via OpenMP thread reduction.
-* **Multi-Threaded Zero Search Engine:** Executes parallel grid evaluation on $\text{Re}(s) = 0.5$ with dynamic load balancing to locate non-trivial zero candidates ($s = 0.5 + it$).
-* **Arbitrary-Precision Prime Gap Calculation:** Integrates **GNU GMP (`libgmpxx`)** to evaluate prime distributions and maximal prime gaps beyond native 64-bit integer limits.
-* **HPC Benchmarking Suite:** Measures wall-clock performance, speedup efficiency across multi-core architectures, and algorithm scaling up to $N = 10^7$ series terms.
+- **Parallel zero search:** The critical-line grid scan `t ∈ [t_start, t_end]`
+  is distributed across threads with `#pragma omp parallel for` and dynamic
+  scheduling; each thread bisects/refines its own bracket independently, and
+  results are merged and sorted once the parallel region ends.
+- **Adaptive-precision Z(t) evaluation:** The Riemann–Siegel `Z(t)` sum uses
+  `~sqrt(t / 2π)` terms (the number the asymptotic formula actually needs)
+  instead of a fixed term count for every `t`, cutting redundant work at low
+  `t` and improving accuracy at high `t`.
+- **Real Brent's method:** Root refinement combines inverse quadratic
+  interpolation, the secant method, and a bisection safeguard — the standard
+  algorithm, not a bisection loop mislabeled as Brent.
+- **Arbitrary-precision prime gap analysis:** Uses GNU GMP (`mpz_class`,
+  `mpz_nextprime`) to find the maximal gap between consecutive primes in a
+  given range. Currently sequential — see *Known Limitations* below.
 
 ---
 
-## 📐 Theoretical Framework
+## 📐 Theoretical Background
 
-### 1. Dirichlet Eta Analytic Continuation
-The standard Riemann Zeta series converges strictly for $\text{Re}(s) > 1$:
-$$\zeta(s) = \sum_{n=1}^{\infty} \frac{1}{n^s}$$
+### 1. Riemann–Siegel Z(t)
 
-To evaluate values in the critical strip $0 < \text{Re}(s) < 1$, we utilize the **Dirichlet Eta function** $\eta(s)$:
-$$\eta(s) = \sum_{n=1}^{\infty} \frac{(-1)^{n-1}}{n^s} = \left(1 - 2^{1-s}\right) \zeta(s)$$
+On the critical line, ζ(1/2 + it) is evaluated via the real-valued
+Riemann–Siegel function:
 
-Rearranging gives the optimized numerical approximation:
-$$\zeta(s) = \frac{1}{1 - 2^{1-s}} \sum_{n=1}^{\infty} \frac{(-1)^{n-1}}{n^s}$$
+$$Z(t) = e^{i\theta(t)} \zeta(1/2 + it)$$
 
-### 2. The Riemann Hypothesis & Critical Line
-The **Riemann Hypothesis** asserts that all non-trivial zeros of $\zeta(s)$ lie on the critical line $\text{Re}(s) = 0.5$. Our parallel engine calculates $t \in \mathbb{R}$ values where $\vert{}\zeta(0.5 + it)\vert{} \to 0$.
+where θ(t) is the Riemann–Siegel theta function. `Z(t)` is real, so its sign
+changes mark candidate zeros of ζ on the critical line — this is what the
+engine scans for.
+
+### 2. The Riemann Hypothesis
+
+The Riemann Hypothesis conjectures that every non-trivial zero of ζ(s) lies
+on Re(s) = 0.5. This engine searches for `t` values where `Z(t) ≈ 0` and
+refines each candidate to the requested tolerance with Brent's method.
 
 ---
 
-## 📊 Performance & Benchmarks
+## 🛠 Build & Run
 
-All benchmarks were conducted on an **8-Core / 16-Thread Testbed** running Linux Environment.
+### Prerequisites
 
-### Multi-Threaded Speedup (OpenMP Scaling)
-* **Target Domain:** $t \in [10.0, 50.0]$, $N = 1,000,000$ terms per point evaluation.
-
-| CPU Threads | Execution Time (s) | Speedup Factor | Efficiency (%) |
-| :---: | :---: | :---: | :---: |
-| **1 Thread (Sequential)** | 18.42 s | 1.00x | 100.0% |
-| **2 Threads** | 9.31 s | 1.98x | 99.0% |
-| **4 Threads** | 4.78 s | 3.85x | 96.2% |
-| **8 Threads** | 2.51 s | 7.33x | 91.6% |
-| **16 Threads (SMT)** | 1.49 s | 12.36x | 77.2% |
-
-### Execution Time Visualizer
-
-```text
-[Execution Time (Seconds) - Lower is Better]
-1 Thread  | ████████████████████████████████████ 18.42s
-2 Threads | ██████████████████ 9.31s
-4 Threads | █████████ 4.78s
-8 Threads | █████ 2.51s
-16 Threads| ███ 1.49s
-
-Build & Installation
-Prerequisites
-Make sure you have g++ with C++20 support and necessary libraries installed:
- sudo apt update
+```bash
+sudo apt update
 sudo apt install build-essential libgmp-dev libmpfr-dev libomp-dev
+```
 
-Compilation
-Compile using high-level optimization flags (-O3) and OpenMP multi-threading support:
+You'll also need [`mpreal.h`](https://github.com/advanpix/mpreal) (a
+header-only MPFR C++ wrapper) placed alongside `main.cpp`.
+
+### Compile
+
+```bash
 g++ -O3 -std=c++20 main.cpp -fopenmp -lgmpxx -lgmp -lmpfr -o zeta_engine
+```
 
-Execution
+### Run
+
+```bash
 ./zeta_engine
+```
 
-📄 Academic Portfolio Context
-Developed as part of an academic portfolio for undergraduate admissions in Applied Mathematics and Cybersecurity.
+Set the thread count explicitly if you want to compare scaling:
+
+```bash
+OMP_NUM_THREADS=4 ./zeta_engine
+```
+
+---
+
+## 📊 Benchmarking
+
+To produce an honest speedup table, run the same range with
+`OMP_NUM_THREADS` set to 1, 2, 4, 8... and record the wall-clock time
+printed at the end of each run. Fill in your own machine's numbers —
+posting figures without the code behind them (the previous version's
+benchmark table) undermines a portfolio piece more than an absent table
+would.
+
+| Threads | Time (s) | Speedup | Efficiency |
+|---------|----------|---------|------------|
+| 1       |          | 1.00x   |            |
+| 2       |          |         |            |
+| 4       |          |         |            |
+| 8       |          |         |            |
+
+---
+
+## ⚠️ Known Limitations
+
+Being upfront about these matters more than hiding them — reviewers notice,
+and it reads better to have named them yourself:
+
+- The prime gap module is currently **sequential**. A correct parallel
+  version needs to stitch gaps across chunk boundaries (a gap can straddle
+  two threads' ranges); that's a natural next step, not yet implemented.
+- The web page's "real-time" curve is a static illustration of expected
+  output, not a live run of the C++ engine in the browser. A true live demo
+  would need a WebAssembly build of the engine or a backend that runs it.
+- `Z_function_mpfr` uses only the main Riemann–Siegel sum, not the full
+  asymptotic correction series (C₀, C₁, ...). This is accurate enough for
+  the tested range but loses precision faster than the full formula as `t`
+  grows very large.
+
+---
+
+## 📄 Academic Portfolio Context
+
+Developed as part of an academic portfolio for undergraduate admissions in
+Applied Mathematics and Cybersecurity.
