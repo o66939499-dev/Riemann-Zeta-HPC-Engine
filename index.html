@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="tk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Riemann Zeta HPC Engine</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Spectral:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header class="site-header">
+  <div class="wrap">
+    <h1>Riemann Zeta HPC Engine</h1>
+    <p class="subtitle">Kritiki setirdäki (Re(s) = 1/2) nollary gözlemek üçin ýokary takyklykly hasaplaýyş dwigateli</p>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <section class="hero" aria-label="Janly Z(t) grafigi">
+    <div class="plot-panel">
+      <canvas id="zetaCanvas"></canvas>
+    </div>
+
+    <div class="controls">
+      <div class="control-group">
+        <label for="tStart">t başlangyjy <span id="tStartVal" class="mono"></span></label>
+        <input type="range" id="tStart" min="1" max="500" step="1" value="10">
+      </div>
+      <div class="control-group">
+        <label for="tEnd">t soňy <span id="tEndVal" class="mono"></span></label>
+        <input type="range" id="tEnd" min="10" max="1000" step="1" value="60">
+      </div>
+      <div class="stats mono">
+        <span><strong id="zeroCount">0</strong> nol tapyldy</span>
+        <span id="computeTime">0.0 ms</span>
+      </div>
+    </div>
+  </section>
+
+  <section class="terminal-section">
+    <h2>Terminal çykyşy <span class="live-badge">JANLY</span></h2>
+    <div class="terminal" id="terminal" role="log" aria-live="polite"></div>
+    <p class="note">Bu çykyş saýlanan aralykda brauzeriňizde hakykatdan hasaplanýar (double-precision, Brent usuly bilen anyklaşdyrylýar) — statiki log däl.</p>
+  </section>
+
+  <section class="explainer">
+    <h2>Nädip işleýär</h2>
+    <p>
+      Kritiki setirdäki ζ(1/2 + it) hakyky Riemann–Siegel funksiýasy Z(t) arkaly
+      hasaplanýar. Z(t)-iň belgisi üýtgeýän ýerleri (sign change) ζ funksiýasynyň
+      mümkin bolan nollaryny görkezýär. Her kandidat aralyk soňra Brent usuly
+      (inverse quadratic interpolation + secant + bisection) bilen takyklaşdyrylýar.
+    </p>
+    <p>
+      Bu sahypadaky JavaScript wersiýasy double-precision arifmetika ulanýar —
+      interaktiw grafik üçin ýeterlik takyklyk. Repo-daky C++ dwigeni bolsa
+      MPFR bilen 256-bit takyklykda işleýär we goşmaça GMP arkaly asyl san
+      boşluklaryny (prime gaps) hasaplaýar — has agyr, ýokary takyklykly işler
+      üçin niýetlenen.
+    </p>
+  </section>
+
+  <section class="repo-note">
+    <h2>Doly HPC dwigeni</h2>
+    <p>Ýokary takyklykly (256-bit MPFR) we parallel (OpenMP) C++ dwigeni bilen doly kody şu ýerde:</p>
+    <a class="repo-link mono" href="https://github.com/o66939499-dev/Riemann-Zeta-HPC-Engine" target="_blank" rel="noopener">github.com/o66939499-dev/Riemann-Zeta-HPC-Engine</a>
+  </section>
+
+</main>
+
+<footer class="site-footer">
+  <div class="wrap mono">Riemann Zeta HPC Engine — akademiki portfolio taslamasy</div>
+</footer>
+
+<script src="script.js"></script>
+</body>
+</html>
