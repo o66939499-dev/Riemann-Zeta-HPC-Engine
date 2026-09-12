@@ -1,0 +1,237 @@
+:root {
+  --bg: #0A0E12;
+  --surface: #101720;
+  --surface-2: #131B24;
+  --border: #232E3A;
+  --text: #E4E9ED;
+  --text-dim: #8B98A6;
+  --accent: #E8B34C;
+  --accent-dim: #8A6B34;
+  --marker: #4CC9C0;
+  --terminal-text: #9FE8B8;
+
+  --font-display: "Spectral", Georgia, serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  padding: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-mono);
+  line-height: 1.6;
+}
+
+.wrap {
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+.mono { font-family: var(--font-mono); }
+
+/* ---------- Header ---------- */
+
+.site-header {
+  padding: 56px 0 32px;
+  border-bottom: 1px solid var(--border);
+}
+
+.site-header h1 {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 2.1rem;
+  margin: 0 0 10px;
+  letter-spacing: -0.01em;
+}
+
+.subtitle {
+  color: var(--text-dim);
+  font-size: 0.95rem;
+  margin: 0;
+  max-width: 520px;
+}
+
+/* ---------- Hero / plot ---------- */
+
+.hero {
+  padding: 40px 0 8px;
+}
+
+.plot-panel {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 12px;
+}
+
+#zetaCanvas {
+  width: 100%;
+  height: 320px;
+  display: block;
+}
+
+.controls {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px 24px;
+  margin-top: 20px;
+}
+
+.control-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.control-group label {
+  font-size: 0.82rem;
+  color: var(--text-dim);
+  display: flex;
+  justify-content: space-between;
+}
+
+input[type="range"] {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 2px;
+  background: var(--border);
+  outline: none;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: var(--accent);
+  cursor: pointer;
+  border: none;
+}
+
+input[type="range"]::-moz-range-thumb {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: var(--accent);
+  cursor: pointer;
+  border: none;
+}
+
+.stats {
+  grid-column: 1 / -1;
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.85rem;
+  color: var(--text-dim);
+  padding-top: 4px;
+}
+
+.stats strong {
+  color: var(--marker);
+  font-weight: 600;
+}
+
+/* ---------- Terminal ---------- */
+
+.terminal-section {
+  padding: 48px 0 8px;
+}
+
+.terminal-section h2 {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 1.3rem;
+  margin: 0 0 14px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.live-badge {
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.06em;
+  color: var(--marker);
+  border: 1px solid var(--marker);
+  border-radius: 3px;
+  padding: 2px 6px;
+  font-weight: 500;
+}
+
+.terminal {
+  background: #06090C;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 18px 20px;
+  font-size: 0.82rem;
+  color: var(--terminal-text);
+  white-space: pre-wrap;
+  min-height: 140px;
+  overflow-x: auto;
+}
+
+.note {
+  color: var(--text-dim);
+  font-size: 0.82rem;
+  margin-top: 12px;
+}
+
+/* ---------- Explainer / repo ---------- */
+
+.explainer, .repo-note {
+  padding: 48px 0 8px;
+  border-top: 1px solid var(--border);
+}
+
+.explainer h2, .repo-note h2 {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 1.3rem;
+  margin: 0 0 14px;
+}
+
+.explainer p, .repo-note p {
+  color: var(--text-dim);
+  font-size: 0.92rem;
+  max-width: 66ch;
+}
+
+.repo-link {
+  display: inline-block;
+  color: var(--accent);
+  text-decoration: none;
+  border-bottom: 1px solid var(--accent-dim);
+  font-size: 0.88rem;
+  padding-bottom: 2px;
+}
+
+.repo-link:hover {
+  border-bottom-color: var(--accent);
+}
+
+/* ---------- Footer ---------- */
+
+.site-footer {
+  margin-top: 64px;
+  padding: 24px 0 48px;
+  border-top: 1px solid var(--border);
+  color: var(--text-dim);
+  font-size: 0.78rem;
+}
+
+/* ---------- Responsive ---------- */
+
+@media (max-width: 560px) {
+  .controls { grid-template-columns: 1fr; }
+  .site-header { padding: 40px 0 24px; }
+  .site-header h1 { font-size: 1.7rem; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * { scroll-behavior: auto !important; }
+}
